@@ -21,21 +21,22 @@ import woyou.aidlservice.jiuiv5.ICallback;
 /** SunmiPrinterPlugin */
 public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
-  /// The MethodChannel that will the communication between Flutter and native
-  /// Android
+  /// The MethodChannel that will the communication between Flutter and native Android
   ///
-  /// This local reference serves to register the plugin with the Flutter Engine
-  /// and unregister it
+  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private static SunmiPrinterMethod sunmiPrinterMethod;
 
   @Override
   public void onAttachedToEngine(
-      @NonNull FlutterPluginBinding flutterPluginBinding) {
+    @NonNull FlutterPluginBinding flutterPluginBinding
+  ) {
     final MethodChannel channel = new MethodChannel(
-        flutterPluginBinding.getBinaryMessenger(),
-        "sunmi_printer_plus");
-    sunmiPrinterMethod = new SunmiPrinterMethod(flutterPluginBinding.getApplicationContext());
+      flutterPluginBinding.getBinaryMessenger(),
+      "sunmi_printer_plus"
+    );
+    sunmiPrinterMethod =
+      new SunmiPrinterMethod(flutterPluginBinding.getApplicationContext());
     channel.setMethodCallHandler(this);
   }
 
@@ -142,17 +143,17 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         int width = call.argument("width");
         int height = call.argument("height");
         sunmiPrinterMethod.printBarCode(
-            barCodeData,
-            barcodeType,
-            textPosition,
-            width,
-            height);
+          barCodeData,
+          barcodeType,
+          textPosition,
+          width,
+          height
+        );
         sunmiPrinterMethod.lineWrap(1);
 
         result.success(true);
         break;
-      // void printBarCode(String data, int symbology, int height, int width, int
-      // textposition, in ICallback callback);
+      // void printBarCode(String data, int symbology, int height, int width, int textposition,  in ICallback callback);
 
       case "LINE_WRAP":
         int lines = call.argument("lines");
@@ -201,7 +202,14 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
         result.success(mode_desc);
         break;
-
+      // case "LABEL_LOCATE":
+      //   sunmiPrinterMethod.labelLocate();
+      //   result.success(true);
+      //   break;
+      // case "LABEL_OUTPUT":
+      //   sunmiPrinterMethod.labelOutput();
+      //   result.success(true);
+      //   break;
       case "ENTER_PRINTER_BUFFER":
         Boolean clearEnter = call.argument("clearEnter");
         sunmiPrinterMethod.enterPrinterBuffer(clearEnter);
@@ -213,24 +221,23 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         result.success(true);
         break;
       case "CUT_PAPER":
-        sunmiPrinterMethod.cutPaper();
+        // sunmiPrinterMethod.cutPaper();
         result.success(true);
         break;
       case "OPEN_DRAWER":
-        sunmiPrinterMethod.openDrawer();
+        // sunmiPrinterMethod.openDrawer();
         result.success(true);
         break;
 
-      case "DRAWER_OPENED":
-        result.success(sunmiPrinterMethod.timesOpened());
+        case "DRAWER_OPENED":
+        // result.success(sunmiPrinterMethod.timesOpened());
         break;
-
+      
       case "DRAWER_STATUS":
-        result.success(sunmiPrinterMethod.drawerStatus());
-        break;
+        // result.success(sunmiPrinterMethod.drawerStatus());
+      break;  
       case "PRINT_ROW":
         String colsStr = call.argument("cols");
-        Boolean arabic = call.argument("arabic");
 
         try {
           JSONArray cols = new JSONArray(colsStr);
@@ -247,7 +254,7 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
             colsAlign[i] = alignColumn;
           }
 
-          sunmiPrinterMethod.printColumn(colsText, colsWidth, colsAlign, arabic);
+          sunmiPrinterMethod.printColumn(colsText, colsWidth, colsAlign);
           result.success(true);
         } catch (Exception err) {
           Log.d("SunmiPrinter", err.getMessage());
@@ -271,45 +278,35 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         result.success(paper);
         break;
 
-      case "LABEL_LOCATE":
-        sunmiPrinterMethod.labelLocate();
-        result.success(true);
-        break;
-
-      case "LABEL_OUTPUT":
-        sunmiPrinterMethod.labelOutput();
-        result.success(true);
-        break;
-
       // LCD METHODS
       case "LCD_COMMAND":
         int flag = call.argument("flag");
-        sunmiPrinterMethod.sendLCDCommand(flag);
+        // sunmiPrinterMethod.sendLCDCommand(flag);
         result.success(true);
         break;
       case "LCD_STRING":
         String lcdString = call.argument("string");
-        sunmiPrinterMethod.sendLCDString(lcdString);
+        // sunmiPrinterMethod.sendLCDString(lcdString);
         result.success(true);
         break;
       case "LCD_BITMAP":
         byte[] lcdBitmapData = call.argument("bitmap");
         Bitmap lcdBitmap = BitmapFactory.decodeByteArray(
-            lcdBitmapData, 0, lcdBitmapData.length);
-        sunmiPrinterMethod.sendLCDBitmap(lcdBitmap);
+                lcdBitmapData, 0, lcdBitmapData.length);
+        // sunmiPrinterMethod.sendLCDBitmap(lcdBitmap);
         result.success(true);
         break;
       case "LCD_DOUBLE_STRING":
         String topText = call.argument("topText");
         String bottomText = call.argument("bottomText");
-        sunmiPrinterMethod.sendLCDDoubleString(topText, bottomText);
+        // sunmiPrinterMethod.sendLCDDoubleString(topText, bottomText);
         result.success(true);
         break;
       case "LCD_FILL_STRING":
         String lcdFillString = call.argument("string");
         int lcdFillSize = call.argument("size");
         boolean lcdFill = call.argument("fill");
-        sunmiPrinterMethod.sendLCDFillString(lcdFillString, lcdFillSize, lcdFill);
+        // sunmiPrinterMethod.sendLCDFillString(lcdFillString, lcdFillSize, lcdFill);
         result.success(true);
         break;
       case "LCD_MULTI_STRING":
@@ -317,7 +314,7 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         String[] lcdText = Utilities.arrayListToString(lcdTextAL);
         ArrayList<Integer> lcdAlignAL = call.argument("align");
         int[] lcdAlign = Utilities.arrayListToIntList(lcdAlignAL);
-        sunmiPrinterMethod.sendLCDMultiString(lcdText, lcdAlign);
+        // sunmiPrinterMethod.sendLCDMultiString(lcdText, lcdAlign);
         result.success(true);
         break;
 
@@ -328,6 +325,5 @@ public class SunmiPrinterPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-  }
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {}
 }

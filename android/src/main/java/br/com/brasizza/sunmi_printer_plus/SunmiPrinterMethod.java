@@ -17,6 +17,7 @@ import woyou.aidlservice.jiuiv5.*;
 
 import java.util.Arrays;
 
+
 public class SunmiPrinterMethod {
 
     private final String TAG = SunmiPrinterMethod.class.getSimpleName();
@@ -38,8 +39,10 @@ public class SunmiPrinterMethod {
                         .makeText(
                                 _context,
                                 "Sunmi Printer Service Connected. Version :" + serviceVersion,
-                                Toast.LENGTH_LONG)
+                                Toast.LENGTH_LONG
+                        )
                         .show();
+
 
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -49,8 +52,8 @@ public class SunmiPrinterMethod {
                         .makeText(
                                 _context,
                                 "Sunmi Printer Service Not Found",
-                                Toast.LENGTH_LONG)
-                        .show();
+                                Toast.LENGTH_LONG
+                        ).show();
             }
         }
 
@@ -60,7 +63,8 @@ public class SunmiPrinterMethod {
                     .makeText(
                             _context,
                             "Sunmi Printer Service Disconnected",
-                            Toast.LENGTH_LONG)
+                            Toast.LENGTH_LONG
+                    )
                     .show();
         }
     };
@@ -139,10 +143,10 @@ public class SunmiPrinterMethod {
             bold = false;
         }
 
-        byte[] command = new byte[] { 0x1B, 0x45, 0x1 };
+        byte[] command = new byte[]{0x1B, 0x45, 0x1};
 
         if (bold == false) {
-            command = new byte[] { 0x1B, 0x45, 0x0 };
+            command = new byte[]{0x1B, 0x45, 0x0};
         }
 
         try {
@@ -155,29 +159,22 @@ public class SunmiPrinterMethod {
         }
     }
 
+
     public Boolean printColumn(
             String[] stringColumns,
             int[] columnWidth,
-            int[] columnAlignment,
-            Boolean arabic) {
+            int[] columnAlignment
+    ) {
+
 
         try {
 
-            if (arabic) {
-                _woyouService.printColumnsString(
-                        stringColumns,
-                        columnWidth,
-                        columnAlignment,
-                        this._callback());
-
-            } else {
-                _woyouService.printColumnsText(
-                        stringColumns,
-                        columnWidth,
-                        columnAlignment,
-                        this._callback());
-
-            }
+            _woyouService.printColumnsText(
+                    stringColumns,
+                    columnWidth,
+                    columnAlignment,
+                    this._callback()
+            );
 
             return true;
         } catch (RemoteException e) {
@@ -197,18 +194,6 @@ public class SunmiPrinterMethod {
             return false;
         }
     }
-
-    public Boolean cutPaper() {
-        try {
-            _woyouService.cutPaper(this._callback());
-            return true;
-        } catch (RemoteException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-    }
-
     public String getPrinterSerialNo() {
 
         try {
@@ -255,38 +240,6 @@ public class SunmiPrinterMethod {
             return 3;
         }
     }
-
-    public Boolean openDrawer() {
-        try {
-            _woyouService.openDrawer(this._callback());
-            return true;
-        } catch (RemoteException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-    }
-
-    public Boolean drawerStatus() {
-        try {
-            return _woyouService.getDrawerStatus();
-        } catch (RemoteException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-    }
-
-    public int timesOpened() {
-        try {
-            return _woyouService.getOpenDrawerTimes();
-        } catch (RemoteException e) {
-            return 0;
-        } catch (NullPointerException e) {
-            return 0;
-        }
-    }
-
     public void lineWrap(int lines) {
         try {
             _woyouService.lineWrap(lines, this._callback());
@@ -348,7 +301,8 @@ public class SunmiPrinterMethod {
             int barcodeType,
             int textPosition,
             int width,
-            int height) {
+            int height
+    ) {
         try {
             _woyouService.printBarCode(
                     data,
@@ -356,7 +310,8 @@ public class SunmiPrinterMethod {
                     height,
                     width,
                     textPosition,
-                    this._callback());
+                    this._callback()
+            );
         } catch (RemoteException e) {
         } catch (NullPointerException e) {
         }
@@ -386,111 +341,5 @@ public class SunmiPrinterMethod {
                 return null;
             }
         };
-    }
-
-    // LCD METHODS
-
-    public void sendLCDCommand(
-            int flag) {
-        try {
-            _woyouService.sendLCDCommand(
-                    flag);
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    public void sendLCDString(
-            String string) {
-        try {
-            _woyouService.sendLCDString(
-                    string,
-                    this._lcdCallback());
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    public void sendLCDBitmap(
-            android.graphics.Bitmap bitmap) {
-        try {
-            _woyouService.sendLCDBitmap(
-                    bitmap,
-                    this._lcdCallback());
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    public void sendLCDDoubleString(
-            String topText,
-            String bottomText) {
-        try {
-            _woyouService.sendLCDDoubleString(
-                    topText, bottomText,
-                    this._lcdCallback());
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    public void sendLCDFillString(
-            String string,
-            int size,
-            boolean fill) {
-        try {
-            _woyouService.sendLCDFillString(
-                    string, size, fill,
-                    this._lcdCallback());
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    /**
-     * Show multi lines text on LCD.
-     * 
-     * @param text  Text lines.
-     * @param align The weight of the solid content of each line. Like flex.
-     */
-    public void sendLCDMultiString(
-            String[] text,
-            int[] align) {
-        try {
-            _woyouService.sendLCDMultiString(
-                    text, align,
-                    this._lcdCallback());
-        } catch (RemoteException e) {
-        } catch (NullPointerException e) {
-        }
-    }
-
-    private ILcdCallback _lcdCallback() {
-        return new ILcdCallback() {
-            @Override
-            public IBinder asBinder() {
-                return null;
-            }
-
-            @Override
-            public void onRunResult(boolean show) throws RemoteException {
-            }
-        };
-    }
-
-    public void labelLocate() {
-        try {
-            _woyouService.labelLocate();
-        } catch (RemoteException e) {
-
-        }
-    }
-
-    public void labelOutput() {
-        try {
-            _woyouService.labelOutput();
-        } catch (RemoteException e) {
-
-        }
     }
 }
